@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../services/todo_data_service.dart';
 import '../dependencies.dart';
 import '../models/todo.dart';
+import '../models/user.dart';
 
 class TodoListScreen extends StatefulWidget {
   @override
@@ -47,16 +49,21 @@ class _TodoListScreenState extends State<TodoListScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             _todos = snapshot.data;
-            return _buildMainScreen();
+            return _buildMainScreen(context);
           }
           return _buildFetchingDataScreen();
         });
   }
 
-  Scaffold _buildMainScreen() {
+  Scaffold _buildMainScreen(context) {
+    final user = Provider.of<User>(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Todo List'),
+        leading: CircleAvatar(
+          backgroundImage: NetworkImage(user.avatar),
+        ),
+        title: Text(user.name),
       ),
       body: ListView.separated(
         itemCount: _todos.length,
