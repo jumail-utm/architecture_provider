@@ -18,8 +18,13 @@ void main() {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.green),
       home: StreamProvider<List<Todo>>(
-        create: (context) =>
-            service<TodoDataService>().getTodoList().asStream(),
+        create: (context) {
+          final streamController = StreamController<List<Todo>>();
+          service<TodoDataService>()
+              .getTodoList()
+              .then((todos) => streamController.add(todos));
+          return streamController.stream;
+        },
         child: TodoListScreen(),
       ),
     ),
