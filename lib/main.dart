@@ -8,7 +8,7 @@ void main() {
 
   runApp(
     MaterialApp(
-      title: 'Dependency Injection',
+      title: 'Provider Types',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.green),
       home: TodoListScreen(),
