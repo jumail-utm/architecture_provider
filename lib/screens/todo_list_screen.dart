@@ -12,9 +12,11 @@ class TodoListScreen extends StatelessWidget {
       return Center(child: CircularProgressIndicator());
     }
 
+    final darkModeNotifier = Provider.of<ValueNotifier<bool>>(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Todo List (FutureProvider)'),
+        title: Text('My Todo List (NotifierProvider)'),
       ),
       body: ListView.separated(
         itemCount: _todos.length,
@@ -25,6 +27,13 @@ class TodoListScreen extends StatelessWidget {
           final _todo = _todos[index];
           return ListTile(title: Text(_todo.title));
         },
+      ),
+      drawer: Drawer(
+        child: DrawerHeader(
+            child: CheckboxListTile(
+                title: Text('Turn on dark theme color'),
+                value: darkModeNotifier.value,
+                onChanged: (newValue) => darkModeNotifier.value = newValue)),
       ),
     );
   }

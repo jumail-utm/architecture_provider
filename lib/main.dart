@@ -11,13 +11,18 @@ void main() {
   di.init();
 
   runApp(
-    MaterialApp(
-      title: 'Provider Types',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.green),
-      home: FutureProvider<List<Todo>>(
-          create: (context) => service<TodoDataService>().getTodoList(),
-          child: TodoListScreen()),
+    ChangeNotifierProvider<ValueNotifier<bool>>(
+      create: (context) => ValueNotifier(false),
+      child: Consumer<ValueNotifier<bool>>(
+        builder: (_, notifier, __) => MaterialApp(
+          title: 'Provider Types',
+          debugShowCheckedModeBanner: false,
+          theme: notifier.value ? ThemeData.dark() : ThemeData.light(),
+          home: FutureProvider<List<Todo>>(
+              create: (context) => service<TodoDataService>().getTodoList(),
+              child: TodoListScreen()),
+        ),
+      ),
     ),
   );
 }
