@@ -7,6 +7,7 @@ class TodoListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _todos = Provider.of<List<Todo>>(context);
+    final _todosCount = Provider.of<int>(context);
 
     if (_todos == null) {
       return Center(child: CircularProgressIndicator());
@@ -14,7 +15,13 @@ class TodoListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Todo List (FutureProvider)'),
+        title: Text('My Todo List (ProxyProvider)'),
+        actions: <Widget>[
+          CircleAvatar(
+            child: Text(_todosCount.toString()),
+            backgroundColor: Colors.red,
+          )
+        ],
       ),
       body: ListView.separated(
         itemCount: _todos.length,

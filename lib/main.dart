@@ -15,9 +15,16 @@ void main() {
       title: 'Provider Types',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.green),
-      home: FutureProvider<List<Todo>>(
-          create: (context) => service<TodoDataService>().getTodoList(),
-          child: TodoListScreen()),
+      home: MultiProvider(
+        providers: [
+          FutureProvider<List<Todo>>(
+              create: (context) => service<TodoDataService>().getTodoList()),
+          ProxyProvider<List<Todo>, int>(
+              update: (context, todos, previousCount) =>
+                  todos != null ? todos.length : 0)
+        ],
+        child: TodoListScreen(),
+      ),
     ),
   );
 }
