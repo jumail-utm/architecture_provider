@@ -32,8 +32,12 @@ class LoginAsScreen extends StatelessWidget {
               return ListTile(
                 title: Text(user.name),
                 subtitle: Text('user id:  ${user.id}'),
-                onTap: () =>
-                    Navigator.pushReplacement(context, TodoListScreen.route()),
+                onTap: () {
+                  final notifier =
+                      Provider.of<ValueNotifier<User>>(context, listen: false);
+                  notifier.value = user;
+                  Navigator.pushReplacement(context, TodoListScreen.route());
+                },
               );
             },
           );

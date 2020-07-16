@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../models/user.dart';
 import 'login_as_screen.dart';
 
 class TodoListScreen extends StatelessWidget {
@@ -8,17 +10,25 @@ class TodoListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<ValueNotifier<User>>(context, listen: false).value;
+
     return Scaffold(
       appBar: AppBar(
-        leading: CircleAvatar(child: Text('Avatar')),
-        title: Text('User Full Name'),
+        leading: CircleAvatar(
+          backgroundImage: NetworkImage(user.avatar),
+        ),
+        title: Text(user.name),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.fullscreen_exit),
-            onPressed: () => Navigator.pushReplacement(
-              context,
-              LoginAsScreen.route(),
-            ),
+            onPressed: () {
+              Provider.of<ValueNotifier<User>>(context, listen: false).value =
+                  null;
+              Navigator.pushReplacement(
+                context,
+                LoginAsScreen.route(),
+              );
+            },
           ),
         ],
       ),

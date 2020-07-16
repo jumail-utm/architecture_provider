@@ -14,6 +14,9 @@ void main() {
       providers: [
         FutureProvider<List<User>>(
             create: (_) => di.service<UserDataService>().getUserList()),
+        ChangeNotifierProvider<ValueNotifier<User>>(
+          create: (_) => ValueNotifier<User>(null),
+        )
       ],
       child: MaterialApp(
         title: 'Provider State Management',
