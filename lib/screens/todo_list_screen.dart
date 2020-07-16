@@ -57,13 +57,14 @@ class _TodoListScreenState extends State<TodoListScreen> {
 
   Widget _buildMainScreen(context) {
     return Consumer<User>(
-      builder: (_, user, __) => Scaffold(
+      child: Icon(Icons.access_alarm),
+      builder: (_, user, widget) => Scaffold(
         appBar: AppBar(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(user.avatar),
-          ),
-          title: Text(user.name),
-        ),
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(user.avatar),
+            ),
+            title: Text(user.name),
+            actions: [widget]),
         body: ListView.separated(
           itemCount: _todos.length,
           separatorBuilder: (context, index) => Divider(
