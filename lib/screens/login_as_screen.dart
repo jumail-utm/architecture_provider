@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'todo_list_screen.dart';
+import '../models/user.dart';
 
 class LoginAsScreen extends StatelessWidget {
   static Route<dynamic> route() =>
@@ -12,17 +14,28 @@ class LoginAsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Choose a user to login as'),
       ),
-      body: ListView.separated(
-        itemCount: 4,
-        separatorBuilder: (context, index) => Divider(
-          color: Colors.blueGrey,
-        ),
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text('User Full Name'),
-            subtitle: Text('user id:  ${index + 1}'),
-            onTap: () =>
-                Navigator.pushReplacement(context, TodoListScreen.route()),
+      body: Consumer<List<User>>(
+        builder: (context, users, _) {
+          if (users == null) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          return ListView.separated(
+            itemCount: users.length,
+            separatorBuilder: (context, index) => Divider(
+              color: Colors.blueGrey,
+            ),
+            itemBuilder: (context, index) {
+              final user = users[index];
+              return ListTile(
+                title: Text(user.name),
+                subtitle: Text('user id:  ${user.id}'),
+                onTap: () =>
+                    Navigator.pushReplacement(context, TodoListScreen.route()),
+              );
+            },
           );
         },
       ),
