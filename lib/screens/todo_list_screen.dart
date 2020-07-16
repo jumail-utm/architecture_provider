@@ -55,38 +55,38 @@ class _TodoListScreenState extends State<TodoListScreen> {
         });
   }
 
-  Scaffold _buildMainScreen(context) {
-    final user = Provider.of<User>(context);
-
-    return Scaffold(
-      appBar: AppBar(
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(user.avatar),
+  Widget _buildMainScreen(context) {
+    return Consumer<User>(
+      builder: (_, user, __) => Scaffold(
+        appBar: AppBar(
+          leading: CircleAvatar(
+            backgroundImage: NetworkImage(user.avatar),
+          ),
+          title: Text(user.name),
         ),
-        title: Text(user.name),
-      ),
-      body: ListView.separated(
-        itemCount: _todos.length,
-        separatorBuilder: (context, index) => Divider(
-          color: Colors.blueGrey,
+        body: ListView.separated(
+          itemCount: _todos.length,
+          separatorBuilder: (context, index) => Divider(
+            color: Colors.blueGrey,
+          ),
+          itemBuilder: (context, index) {
+            final _todo = _todos[index];
+            return ListTile(
+              title: Text(_todo.title,
+                  style: TextStyle(
+                      decoration: _todo.completed
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none)),
+              subtitle: Text('id: ${_todo.id}'),
+              onTap: () async => toggleTodo(index),
+              onLongPress: () async => deleteTodo(index),
+            );
+          },
         ),
-        itemBuilder: (context, index) {
-          final _todo = _todos[index];
-          return ListTile(
-            title: Text(_todo.title,
-                style: TextStyle(
-                    decoration: _todo.completed
-                        ? TextDecoration.lineThrough
-                        : TextDecoration.none)),
-            subtitle: Text('id: ${_todo.id}'),
-            onTap: () async => toggleTodo(index),
-            onLongPress: () async => deleteTodo(index),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () async => addTodo(),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () async => addTodo(),
+        ),
       ),
     );
   }
