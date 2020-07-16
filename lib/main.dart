@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'screens/todo_list_screen.dart';
+import 'screens/login_as_screen.dart';
 import 'dependencies.dart' as di;
 
 void main() {
@@ -8,10 +8,10 @@ void main() {
 
   runApp(
     MaterialApp(
-      title: 'Provider',
+      title: 'Provider State Management',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.green),
-      home: TodoListScreen(),
+      home: LoginAsScreen(),
     ),
   );
 }

@@ -5,8 +5,8 @@ import 'rest_service.dart';
 class TodoDataService {
   final rest = service<RestService>();
 
-  Future<List<Todo>> getTodoList() async {
-    final listJson = await rest.get('todos');
+  Future<List<Todo>> getUserTodoList({int userId}) async {
+    final listJson = await rest.get('todos?userId=$userId');
 
     return (listJson as List)
         .map((itemJson) => Todo.fromJson(itemJson))

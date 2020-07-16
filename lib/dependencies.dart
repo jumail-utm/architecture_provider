@@ -2,9 +2,12 @@ import './services/rest_service.dart';
 import './services/todo_data_service.dart';
 import 'package:get_it/get_it.dart';
 
+import 'services/user_data_service.dart';
+
 GetIt service = GetIt.instance;
 
 void init() {
-  service.registerLazySingleton(() => TodoDataService());
   service.registerLazySingleton(() => RestService());
+  service.registerLazySingleton(() => TodoDataService());
+  service.registerLazySingleton(() => UserDataService());
 }
