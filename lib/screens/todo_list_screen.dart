@@ -56,39 +56,43 @@ class _TodoListScreenState extends State<TodoListScreen> {
   }
 
   Widget _buildMainScreen(context) {
-    return Consumer<User>(
-      child: Icon(Icons.access_alarm),
-      builder: (_, user, widget) => Scaffold(
-        appBar: AppBar(
+    return Selector<User, int>(
+      selector: (_, User user) => user.id,
+      builder: (context, uid, widget) {
+        final user = Provider.of<User>(context, listen: false);
+
+        return Scaffold(
+          appBar: AppBar(
             leading: CircleAvatar(
               backgroundImage: NetworkImage(user.avatar),
             ),
             title: Text(user.name),
-            actions: [widget]),
-        body: ListView.separated(
-          itemCount: _todos.length,
-          separatorBuilder: (context, index) => Divider(
-            color: Colors.blueGrey,
           ),
-          itemBuilder: (context, index) {
-            final _todo = _todos[index];
-            return ListTile(
-              title: Text(_todo.title,
-                  style: TextStyle(
-                      decoration: _todo.completed
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none)),
-              subtitle: Text('id: ${_todo.id}'),
-              onTap: () async => toggleTodo(index),
-              onLongPress: () async => deleteTodo(index),
-            );
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () async => addTodo(),
-        ),
-      ),
+          body: ListView.separated(
+            itemCount: _todos.length,
+            separatorBuilder: (context, index) => Divider(
+              color: Colors.blueGrey,
+            ),
+            itemBuilder: (context, index) {
+              final _todo = _todos[index];
+              return ListTile(
+                title: Text(_todo.title,
+                    style: TextStyle(
+                        decoration: _todo.completed
+                            ? TextDecoration.lineThrough
+                            : TextDecoration.none)),
+                subtitle: Text('id: ${_todo.id}'),
+                onTap: () async => toggleTodo(index),
+                onLongPress: () async => deleteTodo(index),
+              );
+            },
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () async => addTodo(),
+          ),
+        );
+      },
     );
   }
 
