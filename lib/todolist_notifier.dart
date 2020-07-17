@@ -7,11 +7,19 @@ import 'services/todo_data_service.dart';
 // The todo list is user-specific
 class TodoListNotifier with ChangeNotifier {
   List<Todo> todos;
-  User user;
+  User _user;
 
+  User get user => _user;
+  set user(User user) {
+    _user = user;
+    getList();
+  }
+
+  TodoListNotifier();
   TodoDataService get dataService => service();
 
   Future<void> getList() async {
+    if (user == null) return;
     todos = await dataService.getUserTodoList(userId: user.id);
     notifyListeners();
   }
@@ -28,11 +36,6 @@ class TodoListNotifier with ChangeNotifier {
     todos.removeAt(index);
     notifyListeners();
   }
-
-// Future<Todo> updateTodoStatus({int id, bool status}) async {
-//     final json = await rest.patch('todos/$id', data: {'completed': status});
-//     return Todo.fromJson(json);
-//   }
 
   Future<void> toggleTodoStatus(int index) async {
     final updatedTodo = await dataService.updateTodoStatus(

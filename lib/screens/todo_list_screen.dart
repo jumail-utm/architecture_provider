@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/user.dart';
+import '../todolist_notifier.dart';
 import 'login_as_screen.dart';
 
 class TodoListScreen extends StatelessWidget {
@@ -20,7 +21,9 @@ class TodoListScreen extends StatelessWidget {
         title: Text(user.name),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.fullscreen_exit),
+            icon: Icon(Icons.highlight_off, // highlight_off, touch_app
+                color: Colors.red,
+                size: 40),
             onPressed: () {
               Provider.of<ValueNotifier<User>>(context, listen: false).value =
                   null;
@@ -32,23 +35,44 @@ class TodoListScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView.separated(
-        itemCount: 4,
-        separatorBuilder: (context, index) => Divider(
-          color: Colors.blueGrey,
-        ),
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text('Todo item'),
-            subtitle: Text('id:  ${index + 1}'),
-            onTap: () {},
-            onLongPress: () {},
+      body: Consumer<TodoListNotifier>(
+        builder: (context, todoListNotifier, _) {
+          print('-' * 20);
+
+          final todos = todoListNotifier?.todos;
+          if (todos == null) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          return ListView.separated(
+            itemCount: todos.length,
+            separatorBuilder: (context, index) => Divider(
+              color: Colors.blueGrey,
+            ),
+            itemBuilder: (context, index) {
+              final todo = todos[index];
+
+              // To show which ListTile gets rebuilt
+              print('Build ListTile ${index + 1}');
+
+              return ListTile(
+                title: Text(todo.title,
+                    style: TextStyle(
+                        decoration: todo.completed
+                            ? TextDecoration.lineThrough
+                            : TextDecoration.none)),
+                subtitle: Text('id:  ${todo.id}'),
+                onTap: () => todoListNotifier.toggleTodoStatus(index),
+                onLongPress: () => todoListNotifier.removeTodo(index),
+              );
+            },
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () =>
+            Provider.of<TodoListNotifier>(context, listen: false).addNewTodo(),
       ),
     );
   }
