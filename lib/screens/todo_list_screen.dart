@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/user.dart';
 import '../todolist_notifier.dart';
 import 'login_as_screen.dart';
+import '../models/todo.dart';
 
 class TodoListScreen extends StatelessWidget {
   static Route<dynamic> route() =>
@@ -35,10 +36,13 @@ class TodoListScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<TodoListNotifier>(
-        builder: (context, todoListNotifier, _) {
+      body: Selector<TodoListNotifier, int>(
+        selector: (_, todoListNotifier) => todoListNotifier.todos?.length,
+        builder: (context, _, __) {
           print('-' * 20);
 
+          final todoListNotifier =
+              Provider.of<TodoListNotifier>(context, listen: false);
           final todos = todoListNotifier?.todos;
           if (todos == null) {
             return Center(child: CircularProgressIndicator());
@@ -50,20 +54,28 @@ class TodoListScreen extends StatelessWidget {
               color: Colors.blueGrey,
             ),
             itemBuilder: (context, index) {
-              final todo = todos[index];
+              return Selector<TodoListNotifier, bool>(
+                selector: (_, todoListNotifier) =>
+                    todoListNotifier.todos[index].completed,
+                builder: (_, __, ___) {
+                  final todo =
+                      Provider.of<TodoListNotifier>(context, listen: false)
+                          .todos[index];
 
-              // To show which ListTile gets rebuilt
-              print('Build ListTile ${index + 1}');
+                  // To show which ListTile gets rebuilt
+                  print('Build ListTile ${index + 1}');
 
-              return ListTile(
-                title: Text(todo.title,
-                    style: TextStyle(
-                        decoration: todo.completed
-                            ? TextDecoration.lineThrough
-                            : TextDecoration.none)),
-                subtitle: Text('id:  ${todo.id}'),
-                onTap: () => todoListNotifier.toggleTodoStatus(index),
-                onLongPress: () => todoListNotifier.removeTodo(index),
+                  return ListTile(
+                    title: Text(todo.title,
+                        style: TextStyle(
+                            decoration: todo.completed
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none)),
+                    subtitle: Text('id:  ${todo.id}'),
+                    onTap: () => todoListNotifier.toggleTodoStatus(index),
+                    onLongPress: () => todoListNotifier.removeTodo(index),
+                  );
+                },
               );
             },
           );
